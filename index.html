@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/leapjs/0.6.1/leap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.20/p5.js"></script>
+		<!--<script src="//js.leapmotion.com/leap-plugins-0.1.11.js"></script>-->
+	</head>
+	<body>
+		<div id="frameID"></div>		
+	<script>
+		var controller = new Leap.Controller({enableGestures: true});
+//		var frameDisplay = document.getElementById('frameID');		//
+
+//		this.controller.on('connect', function(){
+//		   setInterval(function(){
+//		      var frame = controller.frame();
+//		      frameDisplay.innerHTML = '<p>Frame: ' + frame.id + ' is ' + (frame.valid ? 'valid.</p>' : 'invalid.</p>');
+//		   }, 500);
+//		});
+
+		controller.connect();
+
+		var colors = []
+
+		function setup() {
+			createCanvas(displayWidth, displayHeight);
+			//background(0);
+		}
+
+		var dots = []
+
+		function draw() {
+			fill(0, 5);
+			rect(0, 0, width, height);
+			//stroke(255);
+			noStroke();
+			var frame = controller.frame();
+			r = random(255);
+			g = random(255);
+			b = random(255);
+			frame.fingers.forEach(function(finger){
+				x = finger.tipPosition[0]+width/2;
+				y = height-finger.tipPosition[1];
+				dots.push({'x':x, 'y':y, 'r':r, 'g':g, 'b':b, 'size':random(15)});
+				//point(x, y);
+			});
+
+			drawDots();
+			moveDots();
+			deleteDots();
+			//console.log(frame.fingers);
+
+		}
+
+		function drawDots(){
+			//fill(random(255), random(255), random(255));
+			dots.forEach(function(dot){
+				fill(dot['r'], dot['g'], dot['b']);
+				ellipse(dot['x'], dot['y'], dot['size'], dot['size']);
+			});
+		}
+
+		function moveDots(){
+			dots.forEach(function(dot){
+				dot['y']+=1;
+			});
+		}
+
+		function deleteDots(){
+			for(i = 0; i < dots.length; i++){
+				if(dots[i]['y']>height) {
+					dots.splice(i, 1);
+				}
+			}
+		}
+	</script>
+	</body>
+</html>
